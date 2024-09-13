@@ -28,6 +28,9 @@ import { useToast } from "vue-toastification";
 const name = ref("");
 const amount = ref("");
 
+// Emit event that can be caught from parent components
+const emit = defineEmits(["transactionSubmitted"]);
+
 const toast = useToast();
 
 const addTransaction = () => {
@@ -37,6 +40,14 @@ const addTransaction = () => {
   if (!name.value || !amount.value) {
     return toast.error("Please fill in both fields.");
   }
+
+  // Emit the submission event
+  const transactionData = {
+    name: name.value,
+    value: parseFloat(amount.value),
+  };
+
+  emit("transactionSubmitted", transactionData);
 
   name.value = "";
   amount.value = "";

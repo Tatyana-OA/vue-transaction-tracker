@@ -4,7 +4,8 @@
     <Balance :balance="total" />
     <IncomeExpenses :income="income" :expenses="expenses" />
     <TransactionList :transactions="transactions" />
-    <AddTransaction />
+    <!-- Listen for custom emitted events, assign function that triggers when event is caught-->
+    <AddTransaction @transactionSubmitted="handleTransactionSubmitted" />
   </div>
 </template>
 
@@ -15,7 +16,7 @@ import IncomeExpenses from "./components/IncomeExpenses.vue";
 import TransactionList from "./components/TransactionList.vue";
 import AddTransaction from "./components/AddTransaction.vue";
 import { ref, computed } from "vue";
-
+import { useToast } from "vue-toastification";
 // Reactive value using ref
 const transactions = ref([
   { id: 1, name: "Salary", value: 2500 },
@@ -29,6 +30,8 @@ const transactions = ref([
   { id: 9, name: "Bonus", value: 500 },
   { id: 10, name: "Electricity Bill", value: -100 },
 ]);
+
+const toast = useToast();
 
 // Get Total
 const total = computed(() => {
@@ -48,4 +51,10 @@ const expenses = computed(() => {
     .filter((transaction) => transaction.value < 0)
     .reduce((acc, curr) => acc + curr.value, 0);
 });
+
+const handleTransactionSubmitted = (transactionData) => {
+  const transactionId = transactions.value.length + 1;
+  transactions.value.push({ id: transactionId, ...transactionData });
+  toast.success("Transaction successfully added.");
+};
 </script>
