@@ -3,7 +3,10 @@
   <div class="container">
     <Balance :balance="total" />
     <IncomeExpenses :income="income" :expenses="expenses" />
-    <TransactionList :transactions="transactions" />
+    <TransactionList
+      :transactions="transactions"
+      @transactionDeleted="handleTransactionDeleted"
+    />
     <!-- Listen for custom emitted events, assign function that triggers when event is caught-->
     <AddTransaction @transactionSubmitted="handleTransactionSubmitted" />
   </div>
@@ -56,5 +59,10 @@ const handleTransactionSubmitted = (transactionData) => {
   const transactionId = transactions.value.length + 1;
   transactions.value.push({ id: transactionId, ...transactionData });
   toast.success("Transaction successfully added.");
+};
+
+const handleTransactionDeleted = (id) => {
+  transactions.value = transactions.value.filter((tr) => tr.id !== id);
+  toast.success("Transaction successfully deleted.");
 };
 </script>

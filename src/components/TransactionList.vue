@@ -7,7 +7,9 @@
       :key="transaction.id"
     >
       {{ transaction.name }} <span>${{ transaction.value }}</span>
-      <button class="delete-btn">x</button>
+      <button class="delete-btn" @click="deleteTransaction(transaction.id)">
+        x
+      </button>
     </li>
   </ul>
 </template>
@@ -37,10 +39,16 @@ export default {
 <script setup>
 import { defineProps } from "vue";
 
+const emit = defineEmits(["transactionDeleted"]);
+
 const props = defineProps({
   transactions: {
     type: Array,
     required: true,
   },
 });
+
+const deleteTransaction = (id) => {
+  emit("transactionDeleted", id);
+};
 </script>
