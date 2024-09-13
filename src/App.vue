@@ -1,7 +1,7 @@
 <template>
   <Header />
   <div class="container">
-    <Balance />
+    <Balance :balance="total" />
     <IncomeExpenses />
     <TransactionList :transactions="transactions" />
     <AddTransaction />
@@ -14,7 +14,7 @@ import Balance from "./components/Balance.vue";
 import IncomeExpenses from "./components/IncomeExpenses.vue";
 import TransactionList from "./components/TransactionList.vue";
 import AddTransaction from "./components/AddTransaction.vue";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 // Reactive value using ref
 const transactions = ref([
@@ -29,4 +29,10 @@ const transactions = ref([
   { id: 9, name: "Bonus", value: 500 },
   { id: 10, name: "Electricity Bill", value: -100 },
 ]);
+
+const total = computed(() => {
+  return transactions.value.reduce((acc, curr) => acc + curr.value, 0);
+});
+
+console.log(total.value);
 </script>
