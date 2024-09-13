@@ -1,5 +1,5 @@
 <template>
-  <Header />
+  <Header @resetTracker="handleResetTracker" />
   <div class="container">
     <Balance :balance="total" />
     <IncomeExpenses :income="income" :expenses="expenses" />
@@ -18,21 +18,18 @@ import Balance from "./components/Balance.vue";
 import IncomeExpenses from "./components/IncomeExpenses.vue";
 import TransactionList from "./components/TransactionList.vue";
 import AddTransaction from "./components/AddTransaction.vue";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useToast } from "vue-toastification";
+
+onMounted(() => {
+  const savedTransactions = JSON.parse(localStorage.getItem("transactions"));
+  if (savedTransactions.length > 0) {
+    transactions.value = savedTransactions;
+  }
+});
+
 // Reactive value using ref
-const transactions = ref([
-  { id: 1, name: "Salary", value: 2500 },
-  { id: 2, name: "Groceries", value: -150 },
-  { id: 3, name: "Car Repair", value: -500 },
-  { id: 4, name: "Freelance Project", value: 800 },
-  { id: 5, name: "Coffee", value: -30 },
-  { id: 6, name: "Investment Return", value: 450 },
-  { id: 7, name: "Rent", value: -1200 },
-  { id: 8, name: "Gym Membership", value: -50 },
-  { id: 9, name: "Bonus", value: 500 },
-  { id: 10, name: "Electricity Bill", value: -100 },
-]);
+const transactions = ref([]);
 
 const toast = useToast();
 
@@ -56,13 +53,28 @@ const expenses = computed(() => {
 });
 
 const handleTransactionSubmitted = (transactionData) => {
-  const transactionId = transactions.value.length + 1;
-  transactions.value.push({ id: transactionId, ...transactionData });
+  transactions.value.push({
+    id: Math.floor(Math.random() * 1000000000).toString(),
+    ...transactionData,
+  });
+  handleLocalStorageTransactions();
   toast.success("Transaction successfully added.");
 };
 
 const handleTransactionDeleted = (id) => {
   transactions.value = transactions.value.filter((tr) => tr.id !== id);
+  handleLocalStorageTransactions();
   toast.success("Transaction successfully deleted.");
+};
+
+// Handle Local Storage
+
+const handleLocalStorageTransactions = () => {
+  localStorage.setItem("transactions", JSON.stringify(transactions.value));
+};
+
+const handleResetTracker = () => {
+  transactions.value = [];
+  localStorage.clear();
 };
 </script>

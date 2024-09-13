@@ -150,3 +150,12 @@ input[type="number"] {
 .list li:hover .delete-btn {
   opacity: 1;
 }
+.tracker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.reset {
+  width: 10rem;
+  background-color: #1c9b3c;
+}
