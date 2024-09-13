@@ -36,7 +36,6 @@ const total = computed(() => {
 });
 
 // Get Income
-
 const income = computed(() => {
   return transactions.value
     .filter((transaction) => transaction.value > 0)
@@ -44,7 +43,6 @@ const income = computed(() => {
 });
 
 // Get Expenses
-
 const expenses = computed(() => {
   return transactions.value
     .filter((transaction) => transaction.value < 0)
